@@ -11,7 +11,7 @@ export const play = (nextTime, period, fn) => {
   if(nextTime < now + scheduleLookahead) {
     // too late
     if(nextTime < now) {
-      console.log('too late by', nextTime - now);
+      // console.log('too late by', nextTime - now);
       fn(nextTime);
 
       // good restart from now
@@ -19,12 +19,12 @@ export const play = (nextTime, period, fn) => {
 
       // next it might be soon: fast forward
       if(nextTime < now + scheduleLookahead) {
-        console.log('soon', nextTime - now);
+        // console.log('soon', nextTime - now);
         fn(nextTime);
         nextTime += period;
       }
     } else {
-      console.log('triggered', nextTime - now);
+      // console.log('triggered', nextTime - now);
       fn(nextTime);
       nextTime += period;
     }
@@ -36,4 +36,6 @@ export const play = (nextTime, period, fn) => {
   }, 1000 * schedulePeriod);
 }
 
-export const stop = () => {}
+export const stop = () => {
+    clearTimeout(scheduleID);
+}

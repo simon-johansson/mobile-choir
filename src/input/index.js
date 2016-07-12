@@ -75,3 +75,8 @@ const sendInputStop = (note) => {
 socket.on('clients', data => {
     $('.clients .connections').text(data.clients - 1);
 })
+
+$('#staccato').on('change', function(event) {
+    event.preventDefault();
+    socket.emit('input:staccato', { staccato: $(this).prop("checked") });
+});

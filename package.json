@@ -25,6 +25,7 @@
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-0": "^6.5.0",
+    "css-loader": "^0.23.1",
     "ejs": "^2.4.2",
     "express": "^4.14.0",
     "extract-text-webpack-plugin": "^1.0.1",
@@ -33,6 +34,7 @@
     "midiutils": "0.0.4",
     "nexusui": "^1.0.8",
     "node-sass": "^3.8.0",
+    "nosleep.js": "^0.5.1",
     "postcss-loader": "^0.9.1",
     "qwerty-hancock": "^0.5.1",
     "rimraf": "^2.5.3",
@@ -44,8 +46,7 @@
     "web-midi-api": "^1.4.4",
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^1.6.1",
-    "webpack-hot-middleware": "^2.12.1",
-    "css-loader": "^0.23.1"
+    "webpack-hot-middleware": "^2.12.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",

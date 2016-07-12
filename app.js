@@ -82,8 +82,8 @@ io.on('connection', function(socket) {
         io.emit('output:stop', data);
     });
 
-    socket.on('input:midi', function(data) {
-        io.emit('output:midi', data);
+    socket.on('input:staccato', function(data) {
+        io.emit('output:staccato', data);
     });
 
     socket.on('disconnect', function() {

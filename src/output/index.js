@@ -1,17 +1,19 @@
-
 const socket = io();
 const $ = require('jquery');
 const Tone = require('tone');
 const StartAudioContext = require('startaudiocontext');
+const NoSleep = require('nosleep.js');
 const Sync = require('./syncClient');
-const { play } = require('./playInSync');
+const { play, stop } = require('./playInSync');
 const { synth, polySynth } = require('./synths');
 
 const START_TIME = 0.024857610000000002;
-const BEAT_TIME = 1;
+const BEAT_TIME = 0.1;
 const NOTE_LENGTH = "8i";
+let activeNotes = [];
+let staccato = false;
 
-var getTimeFunction = () => { return Tone.context.currentTime; };
+var getTimeFunction = () => Tone.context.currentTime;
 let sendFunction = (msg, ...args) => socket.emit(msg, ...args);
 let receiveFunction = (msg, callback) => socket.on(msg, callback);
 
@@ -23,41 +25,64 @@ const startSync = () => {
         // console.log(msg, status);
         if (status.connection === 'online' && !started) {
             play(START_TIME, BEAT_TIME, (startTime) => {
-                const localTime = Math.max(0, sync.getLocalTime(startTime));
-                polySynth.triggerAttackRelease('C4', '8i', localTime);
+                const localTime = Math.max(1, sync.getLocalTime(startTime));
+                // console.log(localTime);
+                polySynth.triggerAttackRelease(activeNotes, '8i', localTime);
             });
         }
     });
 }
 
 socket.on('output:start', data => {
-  console.log('output:start')
-  //- synth.triggerAttack(data.frequency);
-  //- synth.triggerAttack(data.note);
-  // polySynth.triggerAttackRelease(data.note, '2');
-  $('body')
-    .removeClass('A B C D E F G')
-    .addClass(data.note.split('')[0]);
+    // console.log('output:start')
+        //- synth.triggerAttack(data.frequency);
+        //- synth.triggerAttack(data.note);
+        // polySynth.triggerAttackRelease(data.note, '2');
 
-  polySynth.triggerAttack(data.note);
+    activeNotes.push(data.note);
+
+    if (!staccato) polySynth.triggerAttack(data.note);
+
+    $('body')
+        .removeClass('A B C D E F G')
+        .addClass(data.note.split('')[0]);
 });
 
 socket.on('output:stop', data => {
-  console.log('output:stop')
+    // console.log('output:stop')
 
-  $('body').removeClass(data.note.split('')[0])
-  polySynth.triggerRelease(data.note);
+    var index = activeNotes.indexOf(data.note);
+    activeNotes.splice(index, 1);
+
+    if (!staccato) polySynth.triggerRelease(data.note);
+
+    $('body').removeClass(data.note.split('')[0])
 });
 
-if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-// if(true) {
+socket.on('output:staccato', data => {
+    // console.log('output:staccato')
+
+    if (data.staccato) {
+        staccato = true;
+        startSync();
+    } else {
+        staccato = false;
+        stop();
+    }
+});
+
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    // if(true) {
     $("body").addClass("mobile");
-    var element = $("<div>", {id: "mobile-start"}).appendTo("body");
+    var element = $("<div>", { id: "mobile-start" }).appendTo("body");
     var button = $("<div>").attr("id", "start-button").text("Enter").appendTo(element);
+
+    const noSleep = new NoSleep();
+    noSleep.enable();
 
     StartAudioContext.setContext(Tone.context);
     StartAudioContext.on(button);
-    StartAudioContext.onStarted(function(){
+    StartAudioContext.onStarted(() => {
         // startSync();
         element.remove();
     });
