@@ -1,5 +1,5 @@
 {
-  "name": "music-hack",
+  "name": "mobile-choir",
   "version": "0.0.0",
   "private": true,
   "license": "UNLICENSED",
@@ -17,6 +17,9 @@
     "type": "git",
     "url": "https://github.com/simon-johansson/mobile-choir"
   },
+  "engines": {
+    "node": "6.2.1"
+  }
   "dependencies": {
     "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
