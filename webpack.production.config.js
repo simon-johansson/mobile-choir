@@ -4,7 +4,7 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-    var sassLoaders = [
+var sassLoaders = [
     'css-loader',
     'postcss-loader',
     'sass-loader?includePaths[]=' + path.resolve(__dirname, './src')

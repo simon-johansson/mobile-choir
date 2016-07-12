@@ -44,11 +44,11 @@
     "web-midi-api": "^1.4.4",
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^1.6.1",
-    "webpack-hot-middleware": "^2.12.1"
+    "webpack-hot-middleware": "^2.12.1",
+    "css-loader": "^0.23.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "css-loader": "^0.23.1",
     "eslint": "^3.0.1",
     "mocha": "^2.5.3",
     "request": "^2.73.0",

@@ -3,7 +3,7 @@ const socket = io();
 const Tone = require('tone');
 const MIDIUtils = require('midiutils');
 const $ = require('jquery');
-const QwertyHancock = require('qwerty-hancock');
+// const QwertyHancock = require('qwerty-hancock');
 const nexusui = window.nx;
 
 const MIDIkeyboard = require('./keyboard').init((data) => {
