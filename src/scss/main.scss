@@ -1,0 +1,157 @@
+
+@import "mixins";
+@import "variables";
+// @import "tone_js";
+@import "common";
+
+body.input {
+    background: $almost-black;
+
+    section {
+        width: 50%;
+        padding: 10px;
+    }
+    .container {
+        width: 100%;
+        padding: 10px;
+        // border: 1px solid red;
+        border-radius: $borderRadius;
+        background: $concrete;
+        margin-bottom: 10px;
+    }
+}
+
+body.output {
+    background-color: $backgroundColor;
+
+    &.C { background: $orange; }
+    &.D { background: $carrot; }
+    &.E { background: $pumpkin; }
+    &.F { background: $alizarin; }
+    &.G { background: $pomegranate; }
+    &.A { background: $amethyst; }
+    &.B { background: $wisteria; }
+}
+
+.title {
+    margin: 5px 0 0 10px;
+    font-size: 30px;
+    // font-weight: normal;
+}
+
+#mobile-start {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 0, 0.8);
+
+    $buttonSize : 80px;
+
+    #start-button {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        background-color: $turquoise;
+        color: white;
+        font-family: monospace;
+        border-radius: $borderRadius;
+        margin-top: -$buttonSize/2;
+        margin-left: -$buttonSize/2;
+        width: $buttonSize;
+        height: $buttonSize;
+        text-align: center;
+        line-height: $buttonSize;
+        font-size: 15px;
+    }
+
+    #start-button:hover {
+        background-color: $turquoise;
+        color: white;
+    }
+
+    #start-button:hover:active {
+        background-color: #d35400;
+    }
+}
+
+.volume-instructions {
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    width: 95%;
+
+    .container {
+        width: 50%;
+        display: inline-block;
+
+        .btn {
+            margin: auto;
+            width: 100%;
+        }
+    }
+}
+
+#midi-inputs {
+    margin-bottom: 10px;
+
+    h4, label {
+        display: inline-block;
+    }
+
+    label {
+        margin: 0 5px 0 10px;
+
+        input {
+            margin-right: 5px;
+        }
+    }
+}
+
+#virtual-keyboard{
+    canvas {
+        width: 100% !important;
+        height: 200px;
+    }
+}
+
+#join-instructions {
+    // font-size: 300%;
+
+    hr {
+        background: $textColor;
+        border-radius: 10px;
+        border: none;
+        height: 5px;
+        width: 400px;
+        // min-width: 400px;
+        align: left;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 30px;
+        width: 70%;
+        margin-bottom: 5px;
+    }
+
+    p {
+        font-size: 40px;
+        margin-bottom: 20px;
+        font-weight: bold;
+
+        &.clients {
+            font-size: 30px;
+            margin-bottom: 0px;
+        }
+
+        .dot {
+            font-family: sans-serif;
+            font-size: 80px;
+            vertical-align: sub;
+            line-height: 0;
+        }
+    }
+}

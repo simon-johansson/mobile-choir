@@ -1,0 +1,22 @@
+{
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "rules": {
+        "semi": 2,
+        "no-undef": 0,
+        "no-unused-vars": 0,
+        "no-console": 0,
+        "keyword-spacing": 2,
+        "space-before-function-paren": [2, "never"],
+        "quotes": [2, "single", "avoid-escape"],
+        "object-curly-spacing": [2, "never"],
+        "no-var": 2
+    }
+}

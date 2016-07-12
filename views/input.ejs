@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>Mobile Choir - input</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascript/nexusUI.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body class="input">
+
+    <h1 class="title">Mobile Choir</h1>
+
+    <section class="left">
+        <div class="container">
+            <div id="midi-inputs"></div>
+            <div id="virtual-keyboard">
+                <canvas width="500" height="200" nx="keyboard"></canvas>
+            </div>
+
+        </div>
+
+<!--         <div class="container">
+            <div class="setp-sequencer">
+                <canvas height="200" width="500" nx="matrix"></canvas>
+            </div>
+        </div> -->
+    </section>
+
+    <section class="right">
+        <div class="container">
+            <div id="join-instructions">
+                <h1>Create a choir:</h1>
+                <hr align="left">
+                <p><span class="dot">&middot;</span> Go to <a href="http://mobile-choir.herokuapp.com">mobile-choir.herokuapp.com</a> on your mobile device</p>
+                <p><span class="dot">&middot;</span> Umute and turn up the volume</p>
+                <p class="clients">Clients connected: <span class="connections">5</span></p>
+            </div>
+        </div>
+    </section>
+
+    <script src="/javascript/bundle.js"></script>
+  </body>
+</html>
