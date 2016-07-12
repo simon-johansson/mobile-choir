@@ -12,7 +12,7 @@ module.exports = {
     output: {
         path: __dirname,
         filename: 'bundle.js',
-        publicPath: '/javascript'
+        publicPath: '/'
     },
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
@@ -34,5 +34,9 @@ module.exports = {
             test: /\.scss$/,
             loaders: ["style", "css", "sass"]
         }]
-    }
+    },
+    resolve: {
+        extensions: ['', '.js', '.scss'],
+        root: [path.join(__dirname, './src')]
+    },
 };
