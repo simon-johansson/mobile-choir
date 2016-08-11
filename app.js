@@ -2,7 +2,6 @@ const path = require('path');
 const http = require('http');
 
 const express = require('express');
-const socket = require('socket.io');
 const webpack = require('webpack');
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -13,11 +12,7 @@ const port = process.env.PORT || '3000';
 const app = express();
 
 const server = http.createServer(app);
-const io = socket(server);
-
-const getTimeFunction = require('./server/get-time-function');
-const Sync = require('./server/syncServer');
-const sync = new Sync(getTimeFunction);
+require('./server/socket').init(server);
 
 app.set('port', port);
 
@@ -39,22 +34,22 @@ if (isDeveloping) {
     app.use(express.static(path.join(__dirname, 'dist')));
 }
 
-app.get('/', function(req, res, next) {
-    res.render('index', {});
+app.get('/', (req, res, next) => {
+    res.render('mobile', {});
 });
 
-app.get('/input', function(req, res, next) {
+app.get('/input', (req, res, next) => {
     res.render('input', {});
 });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
     const err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
@@ -62,44 +57,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-io.on('connection', function(socket) {
-
-    let sendFunction = (msg, ...args) => socket.emit(msg, ...args);
-    let receiveFunction = (msg, callback) => socket.on(msg, callback);
-    sync.start(sendFunction, receiveFunction);
-
-    io.emit('clients', {
-        clients: Object.keys(io.clients().sockets).length
-    });
-
-    socket.on('input:start', function(data) {
-        // console.log('input recived');
-        io.emit('output:start', data);
-    });
-
-    socket.on('input:stop', function(data) {
-        // console.log('input stopped');
-        io.emit('output:stop', data);
-    });
-
-    socket.on('input:staccato', function(data) {
-        io.emit('output:staccato', data);
-    });
-
-    socket.on('disconnect', function() {
-      io.emit('clients', {
-          clients: Object.keys(io.clients().sockets).length
-      });
-    });
-
-    // socket.on('input', function(data) {
-    //   data.timeStamp = Date.now();
-    //   data.id = socket.id;
-    //   io.emit('direction', data);
-    // });
-});
-
-server.listen(port, function(err) {
+server.listen(port, err => {
     if (err) console.log(err);
     if (isDeveloping) console.info('==> 🌎 Open up http://localhost:%s/ in your browser.', port);
 });

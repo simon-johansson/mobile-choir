@@ -195,3 +195,7 @@ p, .normal {
   @include animation('soft-blink 3.6s ease-in-out infinite');
 }
 
+.fast-blink {
+  @include animation('soft-blink 1s ease-in-out infinite');
+}
+

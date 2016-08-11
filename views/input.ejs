@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>Mobile Choir - input</title>
     <link rel='stylesheet' href='/main.css' />
+    <script src="https://use.fontawesome.com/4afd477426.js"></script>
     <script src="/javascript/nexusUI.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <style type="text/css">
+    body {
+        background: #303030;
+    }
+    </style>
   </head>
   <body class="input">
 
@@ -15,31 +21,61 @@
     <section class="left">
         <div class="container">
             <h1 class="container-title">Keyboard:</h1>
-            <hr align="left">
+            <hr class="title-divider" align="left">
             <div id="midi-inputs"></div>
             <div id="virtual-keyboard">
-                <canvas width="500" height="200" nx="keyboard"></canvas>
+                <canvas width="500" height="200" id="nxKeyboard" nx="keyboard"></canvas>
             </div>
 
-            <input type="checkbox" id="staccato" name=""> <span>Staccato</span>
+            <input type="checkbox" id="repeater" name=""> <span>Repeater</span>
         </div>
 
-<!--         <div class="container">
-            <div class="setp-sequencer">
-                <canvas height="200" width="500" nx="matrix"></canvas>
+        <div class="container">
+            <div id="step-sequencer">
+                <h1 class="container-title">Step sequencer:</h1>
+                <hr class="title-divider" align="left">
+                <ul>
+                    <li>clap</li>
+                    <li>tom</li>
+                    <li>hi-hat</li>
+                    <li>snare</li>
+                    <li>bass</li>
+                </ul>
+                <canvas height="200" width="500" id="nxMatrix" nx="matrix"></canvas>
+                <hr class="sequencer-divider first">
+                <hr class="sequencer-divider second">
+                <hr class="sequencer-divider third">
             </div>
-        </div> -->
+        </div>
     </section>
 
     <section class="right">
         <div class="container">
             <div id="join-instructions">
                 <h1 class="container-title">Create a choir:</h1>
-                <hr align="left">
-                <p><span class="dot">&middot;</span> Go to <a href="http://mobile-choir.herokuapp.com">mobile-choir.herokuapp.com</a> on your mobile device</p>
-                <p><span class="dot">&middot;</span> Umute and turn up the volume</p>
-                <p class="clients">Clients connected: <span class="connections">5</span></p>
+                <hr class="title-divider" align="left">
+
+                <div class="instructions">
+                    <p><span class="dot">&middot;</span> Go to <a href="http://choir.mobi">choir.mobi</a> on your phone</p>
+                    <p><span class="dot">&middot;</span> Umute and turn up the volume</p>
+                </div>
+                <div class="right">
+                    <p class="clients">
+                        <i class="fa fa-mobile"></i>
+                        <span class="connections">5</span>
+                    </p>
+                </div>
             </div>
+        </div>
+        <div class="container">
+            <h1 class="container-title">MIDI tracks:</h1>
+            <hr class="title-divider" align="left">
+            <select class="midi-selector">
+                <option value="jump">Jump</option>
+                <option value="mario">Super Mario</option>
+            </select>
+            <button class="btn" id="start-midi-track">Play <i class="fa fa-play fa-fw fast-blink" aria-hidden="true"></i></button>
+            <button class="btn" id="stop-midi-track">Stop <i class="fa fa-stop fa-fw" aria-hidden="true"></i></button>
         </div>
     </section>
 

@@ -6,25 +6,42 @@
 
 body.input {
     background: $almost-black;
-    max-width: 2000px;
+    // max-width: 2000px;
+    width: 1250px;
     margin: auto;
 
     section {
-        width: 50%;
         padding: 10px;
+
+        &.left {
+            width: 60%;
+        }
+
+        &.right {
+            width: 40%;
+        }
     }
+
     .container {
         width: 100%;
         padding: 10px;
-        // border: 1px solid red;
         border-radius: $borderRadius;
         background: $concrete;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
+        // min-height: 230px;
+        // border: 1px solid red;
     }
 }
 
 body.output {
     background-color: $backgroundColor;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
     &.C { background: $orange; }
     &.D { background: $carrot; }
@@ -41,7 +58,7 @@ body.output {
     // font-weight: normal;
 }
 
-hr {
+hr.title-divider {
     background: $textColor;
     border-radius: 10px;
     border: none;
@@ -58,6 +75,7 @@ h1.container-title {
     margin-bottom: 5px;
 }
 
+#sync-screen,
 #mobile-start {
     position: absolute;
     width: 100%;
@@ -75,7 +93,7 @@ h1.container-title {
         top: 50%;
         background-color: $turquoise;
         color: white;
-        font-family: monospace;
+        // font-family: monospace;
         border-radius: $borderRadius;
         margin-top: -$buttonSize/2;
         margin-left: -$buttonSize/2;
@@ -94,9 +112,18 @@ h1.container-title {
     #start-button:hover:active {
         background-color: #d35400;
     }
+
+    p {
+        position: absolute;
+        font-size: 30px;
+        top: 45%;
+        color: white;
+        text-align: center;
+        width: 100%;
+    }
 }
 
-.volume-instructions {
+#volume-instructions {
     padding: 10px;
     position: absolute;
     bottom: 0;
@@ -133,11 +160,69 @@ h1.container-title {
     canvas {
         width: 100% !important;
         height: 200px;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    ul, li {
+        box-sizing: content-box;
+    }
+}
+
+#step-sequencer {
+    position: relative;
+
+    ul {
+        display: inline-block;
+        float: left;
+        margin: 5px 10px 0 0;
+        padding: 5px 0 0 0;
+
+        li {
+            margin-bottom: 20px;
+        }
+    }
+
+    .sequencer-divider {
+        position: absolute;
+        transform: rotate(90deg);
+        left: 125px;
+        top: 147px;
+        background: rgba(255, 255, 255, 0.6);
+        // background: $clouds;
+        border-radius: 10px;
+        border: none;
+        height: 1px;
+        width: 180px;
+        align: left;
+        margin-bottom: 20px;
+
+        &.first {
+            left: 125px;
+        }
+        &.second {
+            left: 282px;
+        }
+        &.third{
+            left: 440px;
+        }
     }
 }
 
 #join-instructions {
     // font-size: 300%;
+    display: block;
+
+    div.instructions {
+        width: 67%;
+        display: inline-block;
+    }
+
+    div.right {
+        width: 30%;
+        display: inline-block;
+    }
 
     p {
         font-size: 30px;
@@ -145,8 +230,27 @@ h1.container-title {
         font-weight: bold;
 
         &.clients {
-            font-size: 20px;
+            margin: auto;
+            position: relative;
             margin-bottom: 0px;
+            width: 105px;
+            // border: 1px solid #000;
+
+            i {
+                font-size: 8em;
+                line-height: 0;
+                margin-top: 50%;
+                color: $almost-black;
+            }
+
+            .connections {
+                color: $sun-flower;
+                position: absolute;
+                top: 15px;
+                font-size: 60px;
+                text-align: center;
+                width: 100%;
+            }
         }
 
         .dot {
@@ -156,4 +260,21 @@ h1.container-title {
             line-height: 0;
         }
     }
+}
+
+.midi-selector {
+    height: 33px;
+    padding: 0 5px;
+    width: 295px;
+}
+
+#start-midi-track,
+#stop-midi-track {
+    display: inline-block;
+}
+#start-midi-track {
+    background: $nephritis;
+}
+#stop-midi-track {
+    background: $alizarin;
 }

@@ -1,5 +1,6 @@
 
 import MIDIUtils from 'midiutils';
+import $ from 'jquery';
 
 const divInputs = document.getElementById('midi-inputs');
 const activeInputs = {};
@@ -22,6 +23,8 @@ export const init = (fn = null) => {
 
                 // update the device list when devices get connected, disconnected, opened or closed
                 midiAccess.onstatechange = function(e){
+                    $('#no-devices-found').hide();
+
                     let port = e.port;
                     let div = port.type === 'input' ? divInputs : void(0);
                     let listener = port.type === 'input' ? checkboxMIDIInOnChange : checkboxMIDIOutOnChange;
@@ -48,7 +51,7 @@ export const init = (fn = null) => {
                         label.appendChild(checkbox);
                         label.appendChild(document.createTextNode(port.name + ' (' + port.state + ', ' +  port.connection + ')'));
                         div.appendChild(label);
-                        div.appendChild(document.createElement('br'));
+                        // div.appendChild(document.createElement('br'));
 
                     // device opened or closed
                     } else if(checkbox !== null) {
@@ -74,13 +77,20 @@ function showMIDIPorts(){
     let inputs, outputs;
     let i, maxi;
 
-    inputs = midiAccess.inputs;
+    // console.log('show');
 
+    inputs = midiAccess.inputs;
     html = '<h4>midi inputs:</h4>';
-    inputs.forEach(function(port){
-        //console.log('in', port.name, port.id);
-        html += '<label><input type="checkbox" id="' + port.type + port.id + '">' + port.name + ' (' + port.state + ', ' +  port.connection + ')</label><br>';
-    });
+
+    if (inputs.size) {
+        inputs.forEach(function(port){
+            //console.log('in', port.name, port.id);
+            html += '<label><input type="checkbox" id="' + port.type + port.id + '">' + port.name + ' (' + port.state + ', ' +  port.connection + ')</label>';
+        });
+    } else {
+        html += '<label id="no-devices-found">No midi devices found</label>';
+    }
+
     divInputs.innerHTML = html;
 
     checkboxes = document.querySelectorAll('#midi-inputs input[type="checkbox"]');
@@ -88,8 +98,6 @@ function showMIDIPorts(){
         checkbox = checkboxes[i];
         checkbox.addEventListener('change', checkboxMIDIInOnChange, false);
     }
-
-
 }
 
 // handle incoming MIDI messages

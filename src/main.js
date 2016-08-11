@@ -1,11 +1,15 @@
 
-require("scss/main.scss")
+import Sync from './shared/syncClient';
+import {getTimeFunction} from './shared/utils';
+import FastClick from 'fastclick';
 
-const FastClick = require('fastclick');
+require('scss/main.scss');
+
+window.sync = new Sync(getTimeFunction);
 FastClick.attach(document.body);
 
 if (window.location.pathname.indexOf('input') !== -1) {
-    require('./input');
+    require('./input').init();
 } else {
-    require('./output');
+    require('./mobile').init();
 }

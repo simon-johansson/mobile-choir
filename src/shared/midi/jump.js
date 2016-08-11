@@ -1,5 +1,5 @@
 
-export default const jump = [
+export default [
     {
         "time": "192i",
         "noteName": "G4",

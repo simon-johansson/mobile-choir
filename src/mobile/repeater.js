@@ -3,24 +3,25 @@ let scheduleID = 0; // to cancel setTimeout
 const schedulePeriod = 0.02;
 const scheduleLookahead = 1;
 
-export const play = (nextTime, period, fn) => {
+export const startRepeater = (nextTime, period, fn) => {
   clearTimeout(scheduleID);
   // console.log(sync.getSyncTime());
   const now = sync.getSyncTime();
 
-  if(nextTime < now + scheduleLookahead) {
+  // console.log(now);
+  if (nextTime < now + scheduleLookahead) {
     // too late
-    if(nextTime < now) {
+    if (nextTime < now) {
       // console.log('too late by', nextTime - now);
-      fn(nextTime);
+      // fn(nextTime);
 
       // good restart from now
       nextTime += Math.ceil((now - nextTime) / period) * period;
 
       // next it might be soon: fast forward
-      if(nextTime < now + scheduleLookahead) {
+      if (nextTime < now + scheduleLookahead) {
         // console.log('soon', nextTime - now);
-        fn(nextTime);
+        // fn(nextTime);
         nextTime += period;
       }
     } else {
@@ -32,10 +33,10 @@ export const play = (nextTime, period, fn) => {
   } // within look-ahead
 
   scheduleID = setTimeout(() => {
-    play(nextTime, period, fn);
+    startRepeater(nextTime, period, fn);
   }, 1000 * schedulePeriod);
-}
+};
 
-export const stop = () => {
-    clearTimeout(scheduleID);
-}
+// export const stop = () => {
+//     clearTimeout(scheduleID);
+// }

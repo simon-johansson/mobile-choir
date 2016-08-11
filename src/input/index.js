@@ -1,82 +1,165 @@
 
+import $ from 'jquery';
+import Tone from 'tone';
+import {sendFunction, receiveFunction, MIDIUtils, keycodeToMIDI} from 'shared/utils';
+
 const socket = io();
-const Tone = require('tone');
-const MIDIUtils = require('midiutils');
-const $ = require('jquery');
-// const QwertyHancock = require('qwerty-hancock');
-const nexusui = window.nx;
+let synced = false;
+const keyStates = [];
+
+const sequencerBPM = 80;
+const sequencerSubdivision = '16n';
+const sequencer = new Tone.Sequence((time, col) => {
+    if (col === 4) onNextSubdivision();
+    nxMatrix.jumpToCol(col);
+}, Array.from(Array(16).keys()), sequencerSubdivision);
+
+const nxAccentColor = '#f1c40f';
+const nxBorderColor = '#828282';
+const nxMatrixRow = 5;
+const nxMatrixCol = 16;
+const nxMatrixCellBuffer = 10;
+const nxMatrixOnResize = () => $('#step-sequencer').width() - 80;
+
+const $clientConnections = $('.clients .connections');
+const $repeater = $('#repeater');
+const $trackSelect = $('select');
+const $startMidiBtn = $('#start-midi-track');
+const $stopMidiBtn = $('#stop-midi-track');
+
+sync.start(sendFunction, receiveFunction, (msg, report) => {
+    if (report.status === 'training' || report.status === 'sync') {
+        synced = true;
+        // Synced!
+    } else {
+        synced = false;
+        // Syncing...
+    }
+});
 
 const MIDIkeyboard = require('./keyboard').init((data) => {
-    console.log(data);
-    let velocity = data.data2;
+    const note = data.midi;
+    const velocity = data.data2;
+    let outOfRange = true;
 
-    if (velocity) {
-        console.log(velocity);
-        sendInputStart(data.note, velocity);
-    } else {
-        sendInputStop(data.note);
-    }
+    nxKeyboard.keys.forEach(key => {
+        if (note === key.note) {
+            nxKeyboard.toggle(key, velocity);
+            outOfRange = false;
+        }
+    });
 
-    keyboard1.keys.forEach(key => {
-        if (data.midi === key.note) keyboard1.toggle(key, velocity);
-    })
+    if (outOfRange) sendKeyboardInput(note, velocity);
 });
 
-nx.onload = function() {
-    keyboard1.sendsTo(data => {
+const onNexusLoaded = () => {
+    nx.colorize(nxAccentColor);
+    nx.colorize('border', nxBorderColor);
+
+    nxKeyboard.sendsTo(data => {
         // console.log(data);
         const note = MIDIUtils.noteNumberToName(data.note).split('-').join('');
-        const event = data.on ? 'input:start' : 'input:stop';
-        socket.emit(event, {note});
-    })
+        const velocity = data.data2;
+        sendKeyboardInput(note, data.on);
+    });
 
-    // matrix1.row = 6;
-    // matrix1.col = 8;
-    // matrix1.cellBuffer = 10;
-    // matrix1.sequenceMode = 'linear'
-    // matrix1.bpm = 120;
-    // matrix1.on('*', (data) => {
-    //     console.log(matrix1.val);
-    // })
-    // matrix1.init()
-    // matrix1.sequence()
-}
+    nxMatrix.row = nxMatrixRow;
+    nxMatrix.col = nxMatrixCol;
+    nxMatrix.cellBuffer = nxMatrixCellBuffer;
+    nxMatrix.init();
+    nxMatrix.resize(nxMatrixOnResize());
+    nxMatrix.draw();
 
-// const virtualKeyboard = new QwertyHancock({
-//     id: "virtual-keyboard",
-//     width: (window.innerWidth / 2.1),
-//     height: 150,
-//     octaves: 2,
-//     startNote: "C3",
-//     whiteKeyColour: "#ecf0f1",
-//     blackKeyColour: "#2c3e50",
-//     hoverColour: "#1EDF3E",
-//     activeColour: "#7f8c8d"
-// });
+    sequencer.start(0);
 
-// virtualKeyboard.keyDown = note => {
-//     console.log(note);
-//     socket.emit('input:start', { note });
-// };
+    $(nxMatrix.canvas).on('click', sendMatrix);
 
-// virtualKeyboard.keyUp = note => {
-//     console.log(note);
-//     socket.emit('input:stop', { note });
-// };
-
-const sendInputStart = (note, velocity) => {
-    socket.emit('input:start', { note, velocity });
+    $(window).on('resize', function(){
+        nxMatrix.resize(nxMatrixOnResize());
+        nxMatrix.draw();
+    });
 };
 
-const sendInputStop = (note) => {
-    socket.emit('input:stop', { note });
-}
+const sendMatrix = () => {
+    socket.emit('input:sequencer:matrix', {
+        matrix: nxMatrix.matrix,
+    });
+};
 
-socket.on('clients', data => {
-    $('.clients .connections').text(data.clients - 1);
-})
+const sendKeyboardInput = (note, velocity) => {
+    if (velocity) {
+        socket.emit('input:start', {note, velocity});
+    } else {
+        socket.emit('input:stop', {note});
+    }
+};
 
-$('#staccato').on('change', function(event) {
-    event.preventDefault();
-    socket.emit('input:staccato', { staccato: $(this).prop("checked") });
-});
+const sendSequencerTime = nextSubdivision => {
+    socket.emit('input:sequencer', {
+        time: sync.getSyncTime(nextSubdivision),
+        matrix: nxMatrix.matrix,
+    });
+};
+
+const onNewClient = (data) => {
+    $clientConnections.text(data.clients - 1);
+};
+
+const onRepeaterChange = () => {
+    socket.emit('input:repeater', {
+        repeater: $repeater.prop('checked')
+    });
+};
+
+const onTrackStart = () => {
+    const track = $trackSelect.val();
+    console.log(track);
+    socket.emit('input:track', {track});
+};
+
+const onKeyPressed = (event) => {
+    // event.preventDefault();
+    const keydown = event.handleObj.type === 'keydown' ? true : false;
+    const keycode = event.keyCode;
+
+    for (let pressed of keyStates) {
+        if (pressed === keycode) {
+            if (keydown) { return; }
+            else {
+                let index = keyStates.indexOf(pressed);
+                keyStates.splice(index, 1);
+            }
+        }
+    }
+
+    if (keydown) keyStates.push(keycode);
+
+    const findKey = (note) => {
+        nxKeyboard.keys.forEach(key => {
+            if (note === key.note) nxKeyboard.toggle(key, keydown);
+        });
+    };
+
+    findKey(keycodeToMIDI[keycode]);
+};
+
+const onNextSubdivision = () => {
+    const nextSubdivision = Tone.Transport.nextSubdivision('1m');
+    sendSequencerTime(nextSubdivision);
+    Tone.Transport.schedule((time) => {
+        sequencer.stop().start(time);
+    }, nextSubdivision);
+};
+
+export const init = () => {
+    Tone.Transport.bpm.value = sequencerBPM;
+    Tone.Transport.start(0);
+
+    nx.onload = onNexusLoaded;
+    socket.on('clients', onNewClient);
+    $repeater.on('change', onRepeaterChange);
+    $startMidiBtn.on('click', onTrackStart);
+    $(document).on('keydown keyup', onKeyPressed);
+};
+
+

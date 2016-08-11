@@ -5,17 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>Mobile Choir - output</title>
     <link rel='stylesheet' href='/main.css' />
+    <script src="https://use.fontawesome.com/4afd477426.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <style type="text/css">
+        body {
+            background: #080808;
+        }
+    </style>
   </head>
   <body class="output">
 
-    <div class="volume-instructions">
+    <div id="volume-instructions">
         <div class="container left">
             <p class="small">Unmute and turn up the volume</p>
         </div>
         <div class="container right">
             <button class="btn test-volume">Test sound</button>
         </div>
+    </div>
+
+    <div id="mobile-start" style="display: none;">
+        <button id="start-button">Enter</button>
+    </div>
+
+    <div id="sync-screen" style="display: none;">
+        <p class="fast-blink">Syncing...</p>
     </div>
 
     <script src="/bundle.js"></script>
